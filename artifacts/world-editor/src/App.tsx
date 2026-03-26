@@ -21,7 +21,7 @@ export default function App() {
             style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}
           >
             <img src={`${base}pwlogo.png`} height={20} alt="logo" />
-            World Editor
+            Architect
           </span>
 
           <button id="btn-new-world">New</button>

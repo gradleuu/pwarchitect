@@ -1,6 +1,7 @@
 const WORLD_W = 80;
 const WORLD_H = 60;
 const TILE_BASE = 32;
+const base = import.meta.env.BASE_URL;
 
 interface TileTexture {
   id: string;
@@ -161,7 +162,7 @@ async function loadAssets() {
 async function loadBackgrounds() {
   backgrounds = [];
   try {
-    const resp = await fetch("/assets/backgrounds/_index.json");
+    const resp = await fetch(`${base}assets/backgrounds/_index.json`);
     if (!resp.ok) return;
     const index: { groups: string[] } = await resp.json();
 
@@ -177,7 +178,7 @@ async function loadBackgrounds() {
       let i = 0;
       while (true) {
         const img = await loadImageMaybe(
-          `/assets/backgrounds/${groupName}_${i}.png`,
+          `${base}assets/backgrounds/${groupName}_${i}.png`,
         );
         if (!img) break;
         bg.layers.push(img);
@@ -198,13 +199,13 @@ async function loadBackgrounds() {
 async function loadCategories() {
   categories = [];
   try {
-    const resp = await fetch("/assets/_index.json");
+    const resp = await fetch(`${base}assets/_index.json`);
     if (!resp.ok) return;
     const index: { folders: string[] } = await resp.json();
 
     for (const folder of index.folders) {
       // metadata should sit next to the folder in assets/
-      const metaResp = await fetch(`/assets/${folder}.metadata`);
+      const metaResp = await fetch(`${base}assets/${folder}.metadata`);
       if (!metaResp.ok) continue;
       const meta = parseMetadata(await metaResp.text());
 
@@ -215,7 +216,7 @@ async function loadCategories() {
         textures: [],
       };
 
-      const texResp = await fetch(`/assets/${folder}/_textures.json`);
+      const texResp = await fetch(`${base}assets/${folder}/_textures.json`);
       if (!texResp.ok) continue;
       const texIndex: { files: string[] } = await texResp.json();
 
@@ -246,21 +247,21 @@ function groupTextureFiles(
     if (!file.endsWith(".png")) continue;
     const name = file.slice(0, -4);
     if (name.endsWith("_Alt")) {
-      const base = name.slice(0, -4);
-      if (!grouped[base]) grouped[base] = { frames: [], altFile: null };
-      grouped[base].altFile = `/assets/${folder}/${file}`;
+      const stem = name.slice(0, -4);
+      if (!grouped[stem]) grouped[stem] = { frames: [], altFile: null };
+      grouped[stem].altFile = `${base}assets/${folder}/${file}`;
       continue;
     }
     const frameMatch = name.match(/^(.+?)_(\d+)$/);
     if (frameMatch) {
-      const base = frameMatch[1];
+      const stem = frameMatch[1];
       const frameIdx = parseInt(frameMatch[2]);
-      if (!grouped[base]) grouped[base] = { frames: [], altFile: null };
-      grouped[base].frames[frameIdx] = `/assets/${folder}/${file}`;
+      if (!grouped[stem]) grouped[stem] = { frames: [], altFile: null };
+      grouped[stem].frames[frameIdx] = `${base}assets/${folder}/${file}`;
     } else {
       if (!grouped[name]) grouped[name] = { frames: [], altFile: null };
       if (grouped[name].frames.length === 0)
-        grouped[name].frames[0] = `/assets/${folder}/${file}`;
+        grouped[name].frames[0] = `${base}assets/${folder}/${file}`;
     }
   }
   return grouped;
