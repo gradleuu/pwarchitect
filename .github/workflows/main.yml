@@ -80,7 +80,7 @@ jobs:
         run: pnpm --filter @workspace/world-editor build
         env:
           PORT: 5173
-          BASE_PATH: /pixelarchitect/
+          BASE_PATH: /pwarchitect/
 
       - name: Upload Pages artifact
         if: matrix.node-version == '22.x'
