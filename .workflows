@@ -1,0 +1,72 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Generate _textures.json for asset folders
+        shell: bash
+        run: |
+          ASSETS_DIR="artifacts/world-editor/public/assets"
+          for dir in "$ASSETS_DIR"/*/; do
+            folder_name=$(basename "$dir")
+            if [[ "$folder_name" == "backgrounds" ]]; then
+              echo "Skipping: $folder_name"
+              continue
+            fi
+            echo "Generating _textures.json in: $dir"
+            (
+              cd "$dir"
+              OUT="_textures.json"
+              mapfile -t files < <(find . -maxdepth 1 -type f -iname "*.png" -printf "%f\n" | sort)
+              {
+                echo '{'
+                echo '  "files": ['
+                for i in "${!files[@]}"; do
+                  file="${files[$i]}"
+                  if [[ $i -lt $((${#files[@]} - 1)) ]]; then
+                    echo "    \"${file}\","
+                  else
+                    echo "    \"${file}\""
+                  fi
+                done
+                echo '  ]'
+                echo '}'
+              } > "$OUT"
+              echo "  -> wrote $OUT (${#files[@]} files)"
+            )
+          done
+
+      - name: Build world-editor
+        working-directory: artifacts/world-editor
+        run: pnpm build
+        env:
+          BASE_PATH: /
+          PORT: 5173
