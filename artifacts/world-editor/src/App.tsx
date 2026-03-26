@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import "./editor.css";
 
+const base = import.meta.env.BASE_URL;
+
 export default function App() {
   const mountedRef = useRef(false);
 
@@ -18,49 +20,42 @@ export default function App() {
             id="app-title"
             style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}
           >
-            <img src="../public/pwlogo.png" height={20} alt="logo" />
+            <img src={`${base}pwlogo.png`} height={20} alt="logo" />
             World Editor
           </span>
+
           <button id="btn-new-world">New</button>
+
           <button
             id="btn-load-world"
             style={{ display: "flex", alignItems: "center", gap: "5px" }}
           >
-            <img
-              src="../public/buttonIcon_import.png"
-              height={15}
-              style={{ verticalAlign: "middle" }}
-            />
-            <span style={{ lineHeight: 1 }}>Import World</span>
+            <img src={`${base}buttonIcon_import.png`} height={15} />
+            <span>Import World</span>
           </button>
 
           <button
             id="btn-export-world"
             style={{ display: "flex", alignItems: "center", gap: "5px" }}
           >
-            <img
-              src="../public/buttonIcon_download.png"
-              height={15}
-              style={{ verticalAlign: "middle" }}
-            />
-            <span style={{ lineHeight: 1 }}>Export World</span>
+            <img src={`${base}buttonIcon_download.png`} height={15} />
+            <span>Export World</span>
           </button>
         </div>
+
         <div id="menubar-right">
           <button
             id="btn-toggle-grid"
             className="active"
             style={{ display: "flex", alignItems: "center", gap: "5px" }}
           >
-            <img
-              src="../public/buttonIcon_eye.png"
-              height={15}
-              style={{ verticalAlign: "middle" }}
-            />
-            <span style={{ lineHeight: 1 }}>Show Grid</span>
+            <img src={`${base}buttonIcon_eye.png`} height={15} />
+            <span>Show Grid</span>
           </button>
+
           <button id="btn-toggle-anim">Animations</button>
           <button id="btn-toggle-alt">Alt Textures</button>
+
           <label id="bg-label">
             <button id="btn-bg-manage">Change Orb</button>
           </label>
@@ -71,9 +66,11 @@ export default function App() {
         <div id="sidebar">
           <div id="category-list-header">Available Categories</div>
           <div id="category-list"></div>
+
           <div id="tile-search-wrap">
             <input id="tile-search" type="search" placeholder="Search…" />
           </div>
+
           <div id="tile-palette-header">Tiles</div>
           <div id="tile-palette"></div>
         </div>
@@ -90,6 +87,7 @@ export default function App() {
         <div id="right-panel">
           <div id="layer-header">Layers</div>
           <div id="layer-list"></div>
+
           <div id="tool-header">Tools</div>
           <div id="tool-list">
             <button
@@ -98,51 +96,45 @@ export default function App() {
               title="Paint (B)"
               style={{ display: "flex", alignItems: "center", gap: "5px" }}
             >
-              <img
-                src="../public/weapon_paintBrush_green.png"
-                width={15}
-                style={{ verticalAlign: "middle" }}
-              />
-              <span style={{ lineHeight: 1 }}>Paint</span>
+              <img src={`${base}weapon_paintBrush_green.png`} width={15} />
+              <span>Paint</span>
             </button>
+
             <button
               className="tool-btn"
               data-tool="fill"
               title="Fill (F)"
               style={{ display: "flex", alignItems: "center", gap: "5px" }}
             >
-              <img
-                src="../public/RedBucket.png"
-                width={15}
-                style={{ verticalAlign: "middle" }}
-              />
-              <span style={{ lineHeight: 1 }}>Fill</span>
+              <img src={`${base}RedBucket.png`} width={15} />
+              <span>Fill</span>
             </button>
+
             <button className="tool-btn" data-tool="rect" title="Rectangle (R)">
               ▭ Rect
             </button>
+
             <button className="tool-btn" data-tool="line" title="Line (L)">
               ╱ Line
             </button>
+
             <button
               className="tool-btn"
               data-tool="pick"
               title="Pick (P)"
               style={{ display: "flex", alignItems: "center", gap: "5px" }}
             >
-              <img
-                src="../public/SoilBlueprint.png"
-                width={15}
-                style={{ verticalAlign: "middle" }}
-              />
-              <span style={{ lineHeight: 1 }}>Pick</span>
+              <img src={`${base}SoilBlueprint.png`} width={15} />
+              <span>Pick</span>
             </button>
           </div>
+
           <div id="tool-hint">
             Right-click = erase
             <br />
             Middle = pan
           </div>
+
           <div id="selected-tile-info">
             <div id="sel-tile-preview"></div>
             <div id="sel-tile-name">No tile selected</div>
